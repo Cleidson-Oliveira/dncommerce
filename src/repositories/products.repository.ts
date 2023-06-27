@@ -47,13 +47,8 @@ export class ProductsRepository {
 
         const db = await conect();
         
-        const updateFields = [
-            data.name ? `product_name = "${data.name}"`: "", 
-            data.category ? `product_category = "${data.category}"`: "",
-            data.description ? `product_description = "${data.description}"`: "",
-            data.price ? `product_price = "${data.price}"`: ""
-        ];
-        const updateFieldsFormated = updateFields.filter(i => i !== "").join(",");
+        const updateFieldsFormated = this.formatUpdateQueryString(data);
+        
         const query = `update products set ${updateFieldsFormated} where product_id = ?;`
 
         const [product] = await db.query(query, id);
@@ -70,5 +65,16 @@ export class ProductsRepository {
         const [product] = await db.query(query, id);
         
         return product;
+    }
+
+    private formatUpdateQueryString (data: Partial<IProducts>) {
+        const updateFields = [
+            data.name ? `product_name = "${data.name}"`: "", 
+            data.category ? `product_category = "${data.category}"`: "",
+            data.description ? `product_description = "${data.description}"`: "",
+            data.price ? `product_price = "${data.price}"`: ""
+        ];
+        
+        return updateFields.filter(i => i !== "").join(",");
     }
 }

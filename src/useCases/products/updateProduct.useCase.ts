@@ -8,7 +8,7 @@ interface IProducts {
     category: string
 }
 
-class GetProductsUseCase {
+class UpdateProductsUseCase {
     private productsRepository: ProductsRepository;
 
     constructor () {
@@ -20,4 +20,4 @@ class GetProductsUseCase {
     }
 }
 
-export default new GetProductsUseCase();
+export default new UpdateProductsUseCase();

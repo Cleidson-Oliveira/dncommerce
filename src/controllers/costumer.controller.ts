@@ -1,41 +1,41 @@
 import { Request, Response } from "express";
-import CreateProductUseCase from "../useCases/products/createProduct.useCase";
-import GetProductsUseCase from "../useCases/products/getProducts.useCase";
-import DeleteProductUseCase from "../useCases/products/deleteProduct.useCase";
-import UpdateProductUseCase from "../useCases/products/updateProduct.useCase";
+import CreateCostumerUseCase from "../useCases/costumers/createCostumer.useCase";
+import GetCostumersUseCase from "../useCases/costumers/getCostumers.useCase";
+import UpdateCostumerUseCase from "../useCases/costumers/updateCostumer.useCase";
+import DeleteCostumerUseCase from "../useCases/costumers/deleteCostumer.useCase";
 
-export class ProductsController {
+export class CostumersController {
     create (req: Request, res: Response) {
         const data = req.body;
         
-        CreateProductUseCase.execute(data)
-        .then((product) => {
-            return res.json(product);
+        CreateCostumerUseCase.execute(data)
+        .then((costumer) => {
+            return res.json(costumer);
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(400).json({error: "Can not be create product"})
+            return res.status(400).json({error: "Can not be create costumer"})
         })
     }
 
     listById (req: Request, res: Response) {
         const { id } = req.params;
 
-        GetProductsUseCase.execute(id)
-        .then((product) => {
-            return res.json(product);
+        GetCostumersUseCase.execute(id)
+        .then((costumer) => {
+            return res.json(costumer);
         })
         .catch ((error) => {
             console.error(error);
-            return res.status(404).json({error: "Product nor found!"});
+            return res.status(404).json({error: "Costumer not found!"});
         })
     }
 
     listAll (req: Request, res: Response) {
         
-        GetProductsUseCase.execute()
-        .then((products) => {
-            return res.json(products);
+        GetCostumersUseCase.execute()
+        .then((costumers) => {
+            return res.json(costumers);
         })
         .catch ((error) => {
             console.error(error);
@@ -45,10 +45,10 @@ export class ProductsController {
 
     update (req: Request, res: Response) {
         const { id } = req.params;
-        const productDataUpdate = req.body;
+        const costumerDataUpdate = req.body;
 
         try {
-            UpdateProductUseCase.execute(productDataUpdate, id);
+            UpdateCostumerUseCase.execute(costumerDataUpdate, id);
             return res.status(200).end();
         } catch (error) {
             console.error(error);
@@ -59,7 +59,7 @@ export class ProductsController {
     delete (req: Request, res: Response) {
         const { id } = req.params;
         try {
-            DeleteProductUseCase.execute(id);
+            DeleteCostumerUseCase.execute(id);
             return res.status(200).end();
         } catch (error) {
             console.error(error);

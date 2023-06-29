@@ -3,10 +3,10 @@ import { CostumersRepository } from "../../repositories/costumers.repository";
 interface ICostumer {
     id: string
     name: string
-    cpf: number
-    address: number
+    cpf: string
+    address: string
     email: string
-    telephone: number
+    telephone: string
 }
 
 class UpdateCostumerUseCase {

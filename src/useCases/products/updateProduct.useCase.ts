@@ -12,7 +12,7 @@ class UpdateProductsUseCase {
     private productsRepository: ProductsRepository;
 
     constructor () {
-        this.productsRepository = new ProductsRepository()
+        this.productsRepository = new ProductsRepository();
     }
 
     async execute (data: Partial<IProducts>, id: string|number) {

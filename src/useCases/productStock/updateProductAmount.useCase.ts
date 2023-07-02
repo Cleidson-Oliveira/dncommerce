@@ -8,9 +8,9 @@ class UpdateProductsUseCase {
     }
 
     async execute (amount: number, id: string | number) {
-        const productAmount = await this.productStockRepository.get(id);
+        const product = await this.productStockRepository.get(id);
 
-        const newProductAmount = productAmount - amount;
+        const newProductAmount = product.stockAmount - amount;
 
         if (newProductAmount < 0) return Promise.reject({ 
             code: 500,

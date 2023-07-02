@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 
 import ProductsRoute from "./routes/products.route";
 import CostumerRoute from "./routes/costumers.route";
+import SaleRoute from "./routes/sales.route";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(cors());
 
 app.use(ProductsRoute);
 app.use(CostumerRoute);
+app.use(SaleRoute);
 
 app.listen(port, () => { 
     console.log(`Server listen on http://localhost:${port}`)

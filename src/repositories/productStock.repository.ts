@@ -9,7 +9,7 @@ export class ProductStockRepository {
 
         const data = [amount, productId];
 
-        const stock = db.query(query, data);
+        const stock = await db.query(query, data);
 
         return stock;
     }
@@ -19,9 +19,9 @@ export class ProductStockRepository {
 
         const query = `select * from product_stock where product = (?) limit 1;`;
 
-        const [stock] = db.query(query, [productId]);
+        const [stock] = await db.query(query, [productId]);
 
-        return stock.amount;
+        return {stockAmount: stock[0].amount, productId};
     }
 
     async update (amount: number, productId: number | string) {
@@ -29,7 +29,7 @@ export class ProductStockRepository {
 
         const query = `update product_stock set amount = (?) where product = (?);`;
 
-        const stock = db.query(query, [amount, productId]);
+        const stock = await db.query(query, [amount, productId]);
 
         return stock;
     }
@@ -39,7 +39,7 @@ export class ProductStockRepository {
 
         const query = `delete from product_stock where product = (?);`;
 
-        const stock = db.query(query, [productId]);
+        const stock = await db.query(query, [productId]);
 
         return stock;
     }

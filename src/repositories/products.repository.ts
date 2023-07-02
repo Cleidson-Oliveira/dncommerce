@@ -14,6 +14,7 @@ export class ProductsRepository {
         const db = await conect();
         
         const query = `insert into products ( product_name, product_price, product_description, product_category ) values (?, ?, ?, ?)`;
+        
         const values = [data.name, data.price, data.description, data.category];
         
         const products = await db.query(query, values);

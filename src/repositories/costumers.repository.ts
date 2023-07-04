@@ -1,6 +1,6 @@
 import { conect } from "../database/mysql.connection";
 
-interface ICostumer {
+export interface ICostumer {
     id: string
     name: string
     cpf: string
@@ -72,7 +72,6 @@ export class CostumersRepository {
         const updateFields = [
             data.name ? `costumer_name = "${data.name}"`: "", 
             data.address ? `costumer_address = "${data.address}"`: "",
-            data.cpf ? `costumer_cpf = "${data.cpf}"`: "",
             data.email ? `costumer_email = "${data.email}"`: "",
             data.telephone ? `costumer_telephone = "${data.telephone}"`: ""
         ];

@@ -1,3 +1,6 @@
+import { CostumerNotExist } from "../../errors/costumer/costumerNotExist";
+import { CpfCannotBeChanged } from "../../errors/costumer/cpfCannotBeChanged";
+import { COSTUMER_CPF_CHANGE, COSTUMER_NOT_FOUND } from "../../errors/costumer/errorMessages";
 import { CostumersRepository } from "../../repositories/costumers.repository";
 
 interface ICostumer {
@@ -10,15 +13,22 @@ interface ICostumer {
 }
 
 class UpdateCostumerUseCase {
-    private costumersRepository: CostumersRepository;
-
-    constructor () {
-        this.costumersRepository = new CostumersRepository()
+    constructor (private costumersRepository: Pick<CostumersRepository, "update" | "getById">) {
+        this.costumersRepository = costumersRepository;
     }
 
     async execute (data: Partial<ICostumer>, id: string|number) {
-        return await this.costumersRepository.update(data, id);
+
+        if (data.cpf) throw new CpfCannotBeChanged(COSTUMER_CPF_CHANGE);
+
+        const costumer = await this.costumersRepository.getById(id);
+    
+        if (!costumer.length) throw new CostumerNotExist(COSTUMER_NOT_FOUND);
+
+        const costumerUpdated = await this.costumersRepository.update(data, id);
+
+        return costumerUpdated;
     }
 }
 
-export default new UpdateCostumerUseCase();
+export default UpdateCostumerUseCase;

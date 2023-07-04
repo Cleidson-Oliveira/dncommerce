@@ -1,4 +1,11 @@
 import { CostumersRepository } from "../../repositories/costumers.repository";
+import { DataNotInformed } from "../../errors/costumer/dataNotInformed";
+import { 
+    COSTUMER_ADDRESS_NOT_INFORMED,
+    COSTUMER_CPF_NOT_INFORMED, 
+    COSTUMER_EMAIL_NOT_INFORMED, 
+    COSTUMER_NAME_NOT_INFORMED 
+} from "../../errors/costumer/errorMessages";
 
 interface ICostumer {
     id: string
@@ -10,43 +17,24 @@ interface ICostumer {
 }
 
 class CreateCostumerUseCase {
-    private costumersRepository: CostumersRepository;
-
-    constructor () {
-        this.costumersRepository = new CostumersRepository()
+    constructor (private costumersRepository: Pick<CostumersRepository, "create">) {
+        this.costumersRepository = costumersRepository;
     }
 
     async execute (costumerData: Partial<ICostumer>) {
         const costumerDataInput = costumerData;
 
-        if (!costumerDataInput.name) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The costumer name should be informed!"
-            })
-        };
-        if (!costumerDataInput.cpf) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The costumer CPF should be informed!"
-            })            
-        };
-        if (!costumerDataInput.email) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The costumer E-mail should be informed!"
-            })            
-        };
-        if (!costumerDataInput.address) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The costumer address should be informed!"
-            })            
-        };
+        if (!costumerDataInput.name) throw new DataNotInformed(COSTUMER_NAME_NOT_INFORMED);
+        
+        if (!costumerDataInput.cpf) throw new DataNotInformed(COSTUMER_CPF_NOT_INFORMED);
+
+        if (!costumerDataInput.email) throw new DataNotInformed(COSTUMER_EMAIL_NOT_INFORMED);
+
+        if (!costumerDataInput.address) throw new DataNotInformed(COSTUMER_ADDRESS_NOT_INFORMED);
         
         const costumer = await this.costumersRepository.create(costumerDataInput);
         return costumer;
     }
 }
 
-export default new CreateCostumerUseCase();
+export default CreateCostumerUseCase;

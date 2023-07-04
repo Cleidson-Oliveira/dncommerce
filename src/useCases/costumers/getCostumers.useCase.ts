@@ -1,15 +1,19 @@
+import { CostumerNotExist } from "../../errors/costumer/costumerNotExist";
+import { COSTUMER_NOT_FOUND } from "../../errors/costumer/errorMessages";
 import { CostumersRepository } from "../../repositories/costumers.repository"
 
 class GetCostumersUseCase {
-    private costumersRepository: CostumersRepository;
-
-    constructor () {
-        this.costumersRepository = new CostumersRepository()
+    constructor (private costumersRepository: Pick<CostumersRepository, "getAll" | "getById">) {
+        this.costumersRepository = costumersRepository;
     }
 
     async execute (id: string|number|undefined = undefined) {
         if (id) {
-            return await this.costumersRepository.getById(id);
+            const costumer = await this.costumersRepository.getById(id);
+
+            if(!costumer.length) throw new CostumerNotExist(COSTUMER_NOT_FOUND);
+
+            return costumer;
         } else {
             return await this.costumersRepository.getAll();
         }
@@ -17,4 +21,4 @@ class GetCostumersUseCase {
     }
 }
 
-export default new GetCostumersUseCase();
+export default GetCostumersUseCase;

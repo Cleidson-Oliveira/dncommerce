@@ -1,3 +1,5 @@
+import { DataNotInformed } from "../../errors/product/dataNotInformed";
+import { PRODUCT_NAME_NOT_INFORMED, PRODUCT_PRICE_NOT_INFORMED } from "../../errors/product/errorMessages";
 import { ProductsRepository } from "../../repositories/products.repository";
 import { ProductStockRepository } from "../../repositories/productStock.repository";
 
@@ -11,31 +13,23 @@ interface IProducts {
 }
 
 class CreateProductUseCase {
-    private productsRepository: ProductsRepository;
-    private stockRepository: ProductStockRepository;
-
-    constructor () {
-        this.productsRepository = new ProductsRepository();
-        this.stockRepository = new ProductStockRepository()
+    
+    constructor (
+        private productsRepository: Pick<ProductsRepository, "create">,
+        private stockRepository: Pick<ProductStockRepository, "create">
+    ) {
+        this.productsRepository = productsRepository;
+        this.stockRepository = stockRepository;
     }
 
-    async execute (productData: Partial<IProducts>) {
+    async execute (productData: Partial<IProducts>): Promise<IProducts> {
         const productDataInput = productData;
 
-        if (!productDataInput.name) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The product name should be informed!"
-            })
-        };
-        if (!productDataInput.price) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The product price should be informed!"
-            })            
-        };
+        if (!productDataInput.name) throw new DataNotInformed(PRODUCT_NAME_NOT_INFORMED);
+
+        if (!productDataInput.price) throw new DataNotInformed(PRODUCT_PRICE_NOT_INFORMED);
         
-        if (!productDataInput.category) productDataInput.category = "Geral";
+        if (!productDataInput.category) productDataInput.category = "General";
         if (!productDataInput.description) productDataInput.description = "";
         if (!productDataInput.productStock) productDataInput.productStock = 1;
 
@@ -45,8 +39,15 @@ class CreateProductUseCase {
             this.stockRepository.create(productDataInput.productStock, product.insertId);
         }
 
-        return product;
+        return {
+            id: product.insertId,
+            name: productDataInput.name,
+            price: productDataInput.price,
+            category: productDataInput.category,
+            description: productDataInput.description,
+            productStock: productDataInput.productStock
+        };
     }
 }
 
-export default new CreateProductUseCase();
+export default CreateProductUseCase;

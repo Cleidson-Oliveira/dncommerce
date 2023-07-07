@@ -1,7 +1,6 @@
 import { ProductsRepository } from "../../repositories/products.repository";
 import { ProductStockRepository } from "../../repositories/productStock.repository";
 
-
 class GetProductsUseCase {
     private productsRepository: ProductsRepository;
     private productStockRepository: ProductStockRepository;
@@ -24,7 +23,6 @@ class GetProductsUseCase {
         } else {
             return await this.productsRepository.getAll();
         }
-        
     }
 }
 

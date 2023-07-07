@@ -3,12 +3,19 @@ import CreateProductUseCase from "../useCases/products/createProduct.useCase";
 import GetProductsUseCase from "../useCases/products/getProducts.useCase";
 import DeleteProductUseCase from "../useCases/products/deleteProduct.useCase";
 import UpdateProductUseCase from "../useCases/products/updateProduct.useCase";
+import { ProductsRepository } from "../repositories/products.repository";
+import { ProductStockRepository } from "../repositories/productStock.repository";
 
 export class ProductsController {
     create (req: Request, res: Response) {
         const data = req.body;
         
-        CreateProductUseCase.execute(data)
+        const createProductUseCase = new CreateProductUseCase(
+            new ProductsRepository(),
+            new ProductStockRepository(),
+        )
+        
+        createProductUseCase.execute(data)
         .then((product) => {
             return res.json(product);
                 
@@ -58,8 +65,14 @@ export class ProductsController {
 
     delete (req: Request, res: Response) {
         const { id } = req.params;
+
+        const deleteProductUseCase = new DeleteProductUseCase(
+            new ProductsRepository(),
+            new ProductStockRepository(),
+        )
+        
         try {
-            DeleteProductUseCase.execute(id);
+            deleteProductUseCase.execute(id);
             return res.status(200).end();
         } catch (error) {
             console.error(error);

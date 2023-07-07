@@ -39,8 +39,8 @@ export class ProductStockRepository {
 
         const query = `delete from product_stock where product = (?);`;
 
-        const stock = await db.query(query, [productId]);
+        const [dbResponse] = await db.query(query, [productId]);
 
-        return stock;
+        return dbResponse.affectedRows > 0 ? true : false;
     }
 }

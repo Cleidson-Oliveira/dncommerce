@@ -63,9 +63,9 @@ export class ProductsRepository {
 
         const query = `delete from products where (product_id) = ?`;
 
-        const [product] = await db.query(query, id);
-        
-        return product;
+        const [dbResponse] = await db.query(query, id);
+
+        return dbResponse.affectedRows > 0 ? true : false;
     }
 
     private formatUpdateQueryString (data: Partial<IProducts>) {

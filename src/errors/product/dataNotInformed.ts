@@ -1,4 +1,4 @@
-export class CpfCannotBeChanged extends Error {
+export class DataNotInformed extends Error {
     readonly message: string;
     readonly statusCode: number;
     readonly error: string;

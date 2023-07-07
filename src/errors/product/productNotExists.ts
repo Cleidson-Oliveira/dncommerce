@@ -1,4 +1,4 @@
-export class CpfCannotBeChanged extends Error {
+export class ProductNotExist extends Error {
     readonly message: string;
     readonly statusCode: number;
     readonly error: string;
@@ -6,7 +6,7 @@ export class CpfCannotBeChanged extends Error {
     constructor(message: string) {
         super();
         this.message = message;
-        this.statusCode = 400;
-        this.error = "Bad Request"
+        this.statusCode = 404;
+        this.error = "Not Found"
     }
 }

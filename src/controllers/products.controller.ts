@@ -21,32 +21,42 @@ export class ProductsController {
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(400).json({error: "Can not be create product"})
+            return res.status(error.statusCode).json({error: error.message});
         })
     }
 
     listById (req: Request, res: Response) {
         const { id } = req.params;
 
-        GetProductsUseCase.execute(id)
+        const getProductsUseCase = new GetProductsUseCase(
+            new ProductsRepository(),
+            new ProductStockRepository()
+        )
+
+        getProductsUseCase.execute(id)
         .then((product) => {
             return res.json(product);
         })
         .catch ((error) => {
             console.error(error);
-            return res.status(404).json({error: "Product nor found!"});
+            return res.status(error.statusCode).json({error: error.message});
         })
     }
 
     listAll (req: Request, res: Response) {
+
+        const getProductsUseCase = new GetProductsUseCase(
+            new ProductsRepository(),
+            new ProductStockRepository(),
+        )
         
-        GetProductsUseCase.execute()
+        getProductsUseCase.execute()
         .then((products) => {
             return res.json(products);
         })
         .catch ((error) => {
             console.error(error);
-            return res.status(500);
+            return res.status(error.statusCode).json({error: error.message});
         })
     }
 
@@ -54,13 +64,14 @@ export class ProductsController {
         const { id } = req.params;
         const productDataUpdate = req.body;
 
-        try {
-            UpdateProductUseCase.execute(productDataUpdate, id);
+        UpdateProductUseCase.execute(productDataUpdate, id)
+        .then(() => {
             return res.status(200).end();
-        } catch (error) {
+        })
+        .catch((error) => {
             console.error(error);
-            return res.status(404)
-        }
+            return res.status(error.statusCode).json({error: error.message});
+        })
     }
 
     delete (req: Request, res: Response) {
@@ -71,12 +82,13 @@ export class ProductsController {
             new ProductStockRepository(),
         )
         
-        try {
-            deleteProductUseCase.execute(id);
+        deleteProductUseCase.execute(id)
+        .then(() => {
             return res.status(200).end();
-        } catch (error) {
+        })
+        .catch((error) => {
             console.error(error);
-            return res.status(404);
-        }
+            return res.status(error.statusCode).json({error: error.message});
+        })
     }
 }

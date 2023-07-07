@@ -15,7 +15,7 @@ export class ProductStockRepository {
     }
 
     async get (productId: number | string) {
-        const db = await conect();
+        const db = await conect(); 
 
         const query = `select * from product_stock where product = (?) limit 1;`;
 

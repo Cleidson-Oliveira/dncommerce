@@ -17,7 +17,7 @@ export class CostumersController {
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(error.statusCode).json({error: error.message})
+            return res.status(error.statusCode).json({error: error.message});
         })
     }
 

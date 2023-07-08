@@ -36,7 +36,7 @@ describe("Delete products use case", () => {
         deleteProductUseCase.execute(1)
         .catch(error => {
             expect(error).toBeInstanceOf(ProductNotExist);
-            expect(error.message).toBeInstanceOf(PRODUCT_NOT_EXISTS);
+            expect(error.message).toBe(PRODUCT_NOT_EXISTS);
         })
 
     })

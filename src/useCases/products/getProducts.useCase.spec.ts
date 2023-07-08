@@ -1,3 +1,4 @@
+import { PRODUCT_NOT_EXISTS } from "../../errors/product/errorMessages";
 import { ProductNotExist } from "../../errors/product/productNotExists";
 import GetProductsUseCase from "./getProducts.useCase";
 
@@ -47,6 +48,7 @@ describe("List Producs", () => {
         getProductsUseCase.execute(3)
         .catch(error => {  
             expect(error).toBeInstanceOf(ProductNotExist);
+            expect(error.message).toBe(PRODUCT_NOT_EXISTS);
         })
     })
 })

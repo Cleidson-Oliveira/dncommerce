@@ -1,6 +1,6 @@
 import { conect } from "../database/mysql.connection";
 
-interface IProducts {
+export interface IProducts {
     id: string
     name: string
     description: string

@@ -64,7 +64,11 @@ export class ProductsController {
         const { id } = req.params;
         const productDataUpdate = req.body;
 
-        UpdateProductUseCase.execute(productDataUpdate, id)
+        const updateProductUseCase = new UpdateProductUseCase(
+            new ProductsRepository(),
+        )
+
+        updateProductUseCase.execute(productDataUpdate, id)
         .then(() => {
             return res.status(200).end();
         })

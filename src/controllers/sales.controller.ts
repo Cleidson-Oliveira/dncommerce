@@ -41,7 +41,11 @@ export class CostumersController {
     async listCostumersSales (req: Request, res: Response) {
         const {id} = req.params;
 
-        GetSalesByCostumerUseCase.execute(id)
+        const getSalesByCostumerUseCase = new GetSalesByCostumerUseCase(
+            new SalesRepository
+        );
+
+        getSalesByCostumerUseCase.execute(id)
         .then((sales) => {
             return res.status(200).json(sales);
                 
@@ -53,7 +57,11 @@ export class CostumersController {
     
     async listSales (req: Request, res: Response) {
 
-        GetSalesUseCase.execute()
+        const getSalesUseCase = new GetSalesUseCase(
+            new SalesRepository
+        )
+
+        getSalesUseCase.execute()
         .then((sales) => {
             return res.status(200).json(sales);
                 

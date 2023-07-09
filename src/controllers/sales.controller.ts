@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import CreateSaleUseCase from "../useCases/sales/createSale.useCase";
 import GetSalesUseCase from "../useCases/sales/listAllSales.useCase";
 import GetSalesByCostumerUseCase from "../useCases/sales/listSalesByCostomer.useCase";
+import { CostumersRepository } from "../repositories/costumers.repository";
+import { SalesRepository } from "../repositories/sales.repository";
+import { OrdersRepository } from "../repositories/orders.repository";
+import { ProductStockRepository } from "../repositories/productStock.repository";
 
 interface IProduct {
     id: string | number,
@@ -17,8 +21,14 @@ interface ISale {
 export class CostumersController {
     async create (req: Request, res: Response) {
         const data: ISale = req.body;
+
+        const createSaleUseCase = new CreateSaleUseCase(
+            new SalesRepository,
+            new OrdersRepository,
+            new ProductStockRepository
+        );
         
-        CreateSaleUseCase.execute(data)
+        createSaleUseCase.execute(data)
         .then(() => {
             return res.status(201).end();
                 

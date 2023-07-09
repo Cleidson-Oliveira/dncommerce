@@ -1,24 +1,20 @@
+import { CostumerNotExist } from "../../errors/costumer/costumerNotExist";
+import { COSTUMER_NOT_FOUND } from "../../errors/costumer/errorMessages";
 import { SalesRepository } from "../../repositories/sales.repository";
 
-class GetSalesByCostumerUseCase {
-    private salesRepository: SalesRepository;
-    
-    constructor () {
-        this.salesRepository = new SalesRepository();
+class GetSalesByCostumerUseCase {    
+    constructor (private salesRepository: Pick<SalesRepository, "getAllSalesByCostumer">) {
+        this.salesRepository = salesRepository;
     }
 
     async execute (costumerId: string | number) {
-        if (costumerId) {
-            const sales = await this.salesRepository.getAllSalesByCostumer(costumerId);
+        if (!costumerId) throw new CostumerNotExist(COSTUMER_NOT_FOUND);
 
-            return sales
-        }
+        const sales = await this.salesRepository.getAllSalesByCostumer(costumerId);
 
-        return Promise.reject({
-            code: 404,
-            message: "Costumer not found!"
-        })       
+        return sales
+
     }
 }
 
-export default new GetSalesByCostumerUseCase();
+export default GetSalesByCostumerUseCase;

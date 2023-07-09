@@ -1,6 +1,11 @@
 import { SalesRepository } from "../../repositories/sales.repository";
 import { OrdersRepository } from "../../repositories/orders.repository";
 import { ProductStockRepository } from "../../repositories/productStock.repository";
+import { DataNotInformed } from "../../errors/sales/dataNotInformed";
+import { COSTUMER_NOT_INFORMED, PRODUCTS_NOT_INFORMED, PRODUCTS_OUT_OF_STOCK, SALE_TOTAL_VALUE_NOT_INFORMED } from "../../errors/sales/errorMessages";
+import { ProductOutOfStock } from "../../errors/sales/productOutOfStock";
+import { CostumerNotExist } from "../../errors/costumer/costumerNotExist";
+import { COSTUMER_NOT_FOUND } from "../../errors/costumer/errorMessages";
 
 interface IProduct {
     id: string | number,
@@ -14,38 +19,23 @@ interface ISale {
 }
 
 class CreateSaleUseCase {
-    private salesRepository: SalesRepository;
-    private ordersRepository: OrdersRepository;
-    private productStockRepository: ProductStockRepository;
-
-    constructor () {
-        this.salesRepository = new SalesRepository();
-        this.ordersRepository = new OrdersRepository();
-        this.productStockRepository = new ProductStockRepository();
+    constructor (
+        private salesRepository: Pick<SalesRepository, "create">,
+        private ordersRepository: Pick<OrdersRepository, "create">,
+        private productStockRepository: Pick<ProductStockRepository, "get">
+    ) {
+        this.salesRepository = salesRepository;
+        this.ordersRepository = ordersRepository;
+        this.productStockRepository = productStockRepository;
     }
 
     async execute (saleDataInput: ISale) {
 
-        if (!saleDataInput.costumer) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The costumer should be informed!"
-            })            
-        };
+        if (!saleDataInput.costumer) throw new DataNotInformed(COSTUMER_NOT_INFORMED);
 
-        if (!saleDataInput.totalValue) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The sale total value should be informed!"
-            })            
-        };
+        if (!saleDataInput.totalValue) throw new DataNotInformed(SALE_TOTAL_VALUE_NOT_INFORMED);
 
-        if (!saleDataInput.products.length) {
-            return Promise.reject({ 
-                code: 500,
-                message: "The sale's products should be informed!"
-            })            
-        };
+        if (!saleDataInput.products.length) throw new DataNotInformed(PRODUCTS_NOT_INFORMED);
 
         const productStockMap = new Map<string | number, IProduct>();
 
@@ -60,12 +50,7 @@ class CreateSaleUseCase {
             return product.stockAmount < productStockMap.get(product.productId)!.amount;
         })
 
-        if (productOutOfStock) {
-            return Promise.reject({
-                code: 500,
-                message: "In the list there are products out of stock!"
-            })
-        }
+        if (productOutOfStock) throw new ProductOutOfStock(PRODUCTS_OUT_OF_STOCK);
 
         const sale = await this.salesRepository.create({
             totalValue: saleDataInput.totalValue,
@@ -73,12 +58,7 @@ class CreateSaleUseCase {
             date: new Date()
         })
 
-        if (sale.errno == 1452) {
-            return Promise.reject({
-                code: 404,
-                message: "Costumer not found!"
-            })
-        }
+        if (sale.errno == 1452) throw new CostumerNotExist(COSTUMER_NOT_FOUND);
 
         if (sale[0].insertId) {
             saleDataInput.products.forEach(({id, amount}) => {
@@ -86,8 +66,11 @@ class CreateSaleUseCase {
             })
         }
             
-        return sale;       
+        return {
+            id: sale[0].insertId,
+            ...saleDataInput
+        };
     }
 }
 
-export default new CreateSaleUseCase();
+export default CreateSaleUseCase;

@@ -16,9 +16,9 @@ vendas de um comércio online.
 |/costumers/:id      | Put         | Atualizar informações do cliente        |
 |/costumers/:id      | Delete      | Deletar cliente                         |
 
-```json
-// Exemplo de objeto para cadastro de cliente
+**Exemplo de objeto para cadastro de cliente**
 
+```json
 {
     "name": "S. Holmes",
     "cpf": "123456789",
@@ -38,9 +38,9 @@ vendas de um comércio online.
 |/products/:id       | Put         | Atualizar informações do produto        |
 |/products/:id       | Delete      | Deletar produto                         |
 
-```json
-// Exemplo de objeto para cadastro de produto
+**Exemplo de objeto para cadastro de produto**
 
+```json
 {
     "name": "Notebook",
     "description": "16GB ram, 1TB rom",
@@ -58,9 +58,9 @@ vendas de um comércio online.
 |/sales/:id          | Get         | Buscar vendas pelo cliente id           |
 |/sales/             | Post        | Cadastrar nova venda                    |
 
-```json
-// Exemplo de objeto para cadastro de produto
+**Exemplo de objeto para cadastro de produto**
 
+```json
 {
     "costumer": 1,
     "totalValue": 300000,

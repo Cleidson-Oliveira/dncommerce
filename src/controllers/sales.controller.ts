@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import CreateSaleUseCase from "../useCases/sales/createSale.useCase";
 import GetSalesUseCase from "../useCases/sales/listAllSales.useCase";
 import GetSalesByCostumerUseCase from "../useCases/sales/listSalesByCostomer.useCase";
-import { CostumersRepository } from "../repositories/costumers.repository";
 import { SalesRepository } from "../repositories/sales.repository";
 import { OrdersRepository } from "../repositories/orders.repository";
 import { ProductStockRepository } from "../repositories/productStock.repository";
@@ -34,7 +33,7 @@ export class CostumersController {
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(error.code).json({message: error.message})
+            return res.status(error.statusCode).json({message: error.message})
         })
     }
 
@@ -51,7 +50,7 @@ export class CostumersController {
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(error.code).json({message: error.message})
+            return res.status(error.statusCode).json({message: error.message})
         })
     }
     
@@ -67,7 +66,7 @@ export class CostumersController {
                 
         }).catch((error) => {
             console.error(error);
-            return res.status(error.code).json({message: error.message})
+            return res.status(error.statusCode).json({message: error.message})
         })
     }
 }

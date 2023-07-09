@@ -8,7 +8,8 @@
         "start": "node dist/index.js",
         "build": "tsup src/index.ts --format esm,cjs --dts",
         "test": "jest",
-        "test:dev": "jest --watch"
+        "test:dev": "jest --watch",
+        "db:init": "tsx src/database/init.ts"
     },
     "repository": {
         "type": "git",

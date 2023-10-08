@@ -1,6 +1,6 @@
 # dncommerce API
 Desafio proposto na formação em tecnologia da Escola DNC. </br>
-A aplicação consiste em umA REST API para lidar com o fluxo de </br>
+A aplicação consiste em uma REST API para lidar com o fluxo de </br>
 criação, busca, atualização e deleção de clientes, produtos e </br>
 vendas de um comércio online.
 
